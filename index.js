@@ -67,7 +67,8 @@ app.post('/fbhook/', function (req, res) {
 
     if(event.message && event.message.text) {
       let responseText = responseToNlp(event.message.nlp) || event.message.text.toUpperCase();
-      sendTextMessage(sender, responseText);
+      // sendTextMessage(sender, responseText);
+      sendStructuredMessage(sender);
     }
   }
 
@@ -116,44 +117,44 @@ function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-// function sendStructuredMessage(sender) {
-//   let messageData = {
-//     "attachment": {
-//       "type": "template",
-//       "payload": {
-//       "template_type": "generic",
-//         "elements": [{
-//         "title": "Card #1",
-//           "subtitle": "Subtitle #1",
-//           "image_url": "https://en.facebookbrand.com/wp-content/uploads/2016/09/messenger_icon2.png",
-//           "buttons": [{
-//             "type": "web_url",
-//             "url": "https://developers.facebook.com/docs/messenger-platform/reference/send-api/",
-//             "title": "Messenger API Reference"
-//           }],
-//         }, {
-//           "title": "Card #2",
-//           "subtitle": "Subtitle #2",
-//           "image_url": "https://en.facebookbrand.com/wp-content/uploads/2016/09/messenger_icon2.png",
-//           "buttons": [{
-//             "type": "web_url",
-//             "url": "https://developers.facebook.com/docs/messenger-platform/reference/send-api/",
-//             "title": "Same as the other one"
-//           }],
-//         }]
-//       }
-//     }
-//   };
+function sendStructuredMessage(sender) {
+  let data = {
+    "attachment": {
+      "type": "template",
+      "payload": {
+      "template_type": "generic",
+        "elements": [{
+        "title": "Card #1",
+          "subtitle": "Subtitle #1",
+          "image_url": "https://en.facebookbrand.com/wp-content/uploads/2016/09/messenger_icon2.png",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://developers.facebook.com/docs/messenger-platform/reference/send-api/",
+            "title": "Messenger API Reference"
+          }],
+        }, {
+          "title": "Card #2",
+          "subtitle": "Subtitle #2",
+          "image_url": "https://en.facebookbrand.com/wp-content/uploads/2016/09/messenger_icon2.png",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://developers.facebook.com/docs/messenger-platform/reference/send-api/",
+            "title": "Same as the other one"
+          }],
+        }]
+      }
+    }
+  };
 
-//   request({
-//     url: 'https://graph.facebook.com/v2.6/me/messages',
-//     qs: { access_token: token },
-//     method: 'POST',
-//     json: {
-//       recipient: { id: sender },
-//       message: messageData
-//     }
-//   });
-// }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: { access_token: token },
+    method: 'POST',
+    json: {
+      recipient: { id: sender },
+      message: data
+    }
+  });
+}
 
 app.listen(app.get('port'));
