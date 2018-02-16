@@ -23,72 +23,69 @@ app.get('/fbhook/', function (req, res) {
   }
 });
 
-// app.post('/webhook/', function (req, res) {
-//   // Sample body.entry received from Facebook (some nodes are stripped out)
-//   //
-//   // {
-//   //   "entry": [
-//   //     {
-//   //       "id": "222062301673587",
-//   //       "messaging": [
-//   //         {
-//   //           "sender": {
-//   //             "id": "1172414162861909"
-//   //           },
-//   //           "recipient": {
-//   //             "id": "222062301673587"
-//   //           },
-//   //           "timestamp": 1518784654572,
-//   //           "message": {
-//   //             "text": "Hello",
-//   //             "nlp": {
-//   //               "entities": {
-//   //                 "greetings": [
-//   //                    {
-//   //                      "confidence": 0.99988770484656,
-//   //                      "value": "true",
-//   //                      "_entity": "greetings"
-//   //                    }
-//   //                 ]
-//   //               }
-//   //             }
-//   //           }
-//   //         }
-//   //       ]
-//   //     }
-//   //   ]
-//   // }
+app.post('/fbhook/', function (req, res) {
+  // Sample body.entry received from Facebook (some nodes are stripped out)
+  //
+  // {
+  //   "entry": [
+  //     {
+  //       "id": "222062301673587",
+  //       "messaging": [
+  //         {
+  //           "sender": {
+  //             "id": "1172414162861909"
+  //           },
+  //           "recipient": {
+  //             "id": "222062301673587"
+  //           },
+  //           "timestamp": 1518784654572,
+  //           "message": {
+  //             "text": "Hello",
+  //             "nlp": {
+  //               "entities": {
+  //                 "greetings": [
+  //                    {
+  //                      "confidence": 0.99988770484656,
+  //                      "value": "true",
+  //                      "_entity": "greetings"
+  //                    }
+  //                 ]
+  //               }
+  //             }
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // }
 
-//   console.log(JSON.stringify(req.body, null, 2))
+  let messaging_events = req.body.entry[0].messaging;
 
-//   let messaging_events = req.body.entry[0].messaging;
+  for (let i = 0; i < messaging_events.length; i++) {
+    let event = messaging_events[i];
+    let sender = event.sender.id;
 
-//   for (let i = 0; i < messaging_events.length; i++) {
-//     let event = messaging_events[i];
-//     let sender = event.sender.id;
+    if(event.message && event.message.text) {
+      let responseText = event.message.text.toUpperCase();
+      sendTextMessage(sender, responseText);
+    }
+  }
 
-//     if(event.message && event.message.text) {
-//       let responseText = responseToNlp(event.message.nlp) || event.message.text.toUpperCase();
-//       // sendTextMessage(sender, responseText);
-//       sendStructuredMessage(sender);
-//     }
-//   }
+  res.sendStatus(200);
+});
 
-//   res.sendStatus(200);
-// });
-
-// function sendTextMessage(sender, text) {
-//   // Facebook docs: https://developers.facebook.com/docs/messenger-platform/reference/send-api/
-//   request({
-//     url: 'https://graph.facebook.com/v2.6/me/messages',
-//     qs: { access_token: token },
-//     method: 'POST',
-//     json: {
-//       recipient: { id: sender },
-//       message: { text: text }
-//     }
-//   });
-// }
+function sendTextMessage(sender, text) {
+  // Facebook docs: https://developers.facebook.com/docs/messenger-platform/reference/send-api/
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: { access_token: token },
+    method: 'POST',
+    json: {
+      recipient: { id: sender },
+      message: { text: text }
+    }
+  });
+}
 
 // function responseToNlp(nlp) {
 //   // Sample nlp object
