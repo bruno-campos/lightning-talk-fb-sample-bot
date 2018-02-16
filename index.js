@@ -13,15 +13,15 @@ app.get('/', function (req, res) {
   res.send('Hey! We are up!');
 })
 
-// app.get('/webhook/', function (req, res) {
-//   // To validate the webhook facebook sends a hub.verify_token on the query
-//   // We need to answer with the challenge so it confirms we own the webhook
-//   // This is a one time operation
+app.get('/fbhook/', function (req, res) {
+  // To validate the webhook facebook sends a hub.verify_token on the query
+  // We need to answer with the challenge so it confirms we own the webhook
+  // This is a one time operation
 
-//   if (req.query['hub.verify_token'] === 'CHOSEN_TOKEN') {
-//     res.send(req.query['hub.challenge']);
-//   }
-// });
+  if (req.query['hub.verify_token'] === 'verifytoken') {
+    res.send(req.query['hub.challenge']);
+  }
+});
 
 // app.post('/webhook/', function (req, res) {
 //   // Sample body.entry received from Facebook (some nodes are stripped out)
