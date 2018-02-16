@@ -67,8 +67,8 @@ app.post('/fbhook/', function (req, res) {
 
     if(event.message && event.message.text) {
       let responseText = responseToNlp(event.message.nlp) || event.message.text.toUpperCase();
-      // sendTextMessage(sender, responseText);
-      sendStructuredMessage(sender);
+      sendTextMessage(sender, responseText);
+      // sendStructuredMessage(sender);
     }
   }
 
