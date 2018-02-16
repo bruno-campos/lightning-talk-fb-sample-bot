@@ -66,7 +66,7 @@ app.post('/fbhook/', function (req, res) {
     let sender = event.sender.id;
 
     if(event.message && event.message.text) {
-      let responseText = event.message.text.toUpperCase();
+      let responseText = responseToNlp(event.message.nlp) || event.message.text.toUpperCase();
       sendTextMessage(sender, responseText);
     }
   }
@@ -87,34 +87,34 @@ function sendTextMessage(sender, text) {
   });
 }
 
-// function responseToNlp(nlp) {
-//   // Sample nlp object
-//   //
-//   // "nlp": {
-//   //   "entities": {
-//   //     "greetings": [
-//   //        {
-//   //          "confidence": 0.99988770484656,
-//   //          "value": "true",
-//   //          "_entity": "greetings"
-//   //        }
-//   //     ]
-//   //   }
-//   // }
+function responseToNlp(nlp) {
+  // Sample nlp object
+  //
+  // "nlp": {
+  //   "entities": {
+  //     "greetings": [
+  //        {
+  //          "confidence": 0.99988770484656,
+  //          "value": "true",
+  //          "_entity": "greetings"
+  //        }
+  //     ]
+  //   }
+  // }
 
-//   let responses = {
-//     greetings: ['Hello! How are you?', 'Olá! Como está?', '👋'],
-//     bye: ['Bye!', 'See you!', 'Tchau!', '👋']
-//   }[Object.keys(nlp.entities)[0]];
+  let responses = {
+    greetings: ['Hello! How are you?', 'Olá! Como está?', '¡Hola amigo!'],
+    bye: ['Bye!', 'See you!', 'Tchau!', '👋']
+  }[Object.keys(nlp.entities)[0]];
 
-//   if(responses) {
-//     return sample(responses);
-//   }
-// }
+  if(responses) {
+    return sample(responses);
+  }
+}
 
-// function sample(array) {
-//   return array[Math.floor(Math.random() * array.length)];
-// }
+function sample(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
 
 // function sendStructuredMessage(sender) {
 //   let messageData = {
